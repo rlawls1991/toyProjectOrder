@@ -8,6 +8,10 @@ import com.ideas.domain.member.dto.MemberSearchDto;
 import com.ideas.domain.member.service.MemberService;
 import com.ideas.domain.resource.MemberResource;
 import com.ideas.error.ErrorsResource;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,12 +20,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+@Api("회원 API")
 @RestController
 @RequestMapping(value = "/api/member", consumes = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -38,7 +44,8 @@ public class MemberApiController {
      * @return
      */
     @PostMapping
-    public ResponseEntity createMember(@Valid @RequestBody MemberParamDto memberParamDto, Errors errors) {
+    @ApiOperation(value = "뺄셈", notes = "num1 에서 num2 를 뺍니다.")
+    public ResponseEntity createMember(@Valid @RequestBody @ApiIgnore MemberParamDto memberParamDto, Errors errors) {
         if (errors.hasErrors()) {
             return badRequest(errors);
         }
@@ -62,12 +69,13 @@ public class MemberApiController {
     /**
      * 회원 조회
      *
-     * @param id
+     * @param memberId
      * @return
      */
-    @GetMapping("/{id}")
-    public ResponseEntity getMember(@PathVariable Long id) {
-        MemberDto member = memberService.findByMember(id);
+    @GetMapping("/{memberId}")
+    @ApiOperation(value = "뺄셈", notes = "num1 에서 num2 를 뺍니다.")
+    public ResponseEntity getMember(@PathVariable Long memberId) {
+        MemberDto member = memberService.findByMember(memberId);
 
         if (member == null) {
             return ResponseEntity.notFound().build();
@@ -92,7 +100,8 @@ public class MemberApiController {
      * @return
      */
     @GetMapping
-    public ResponseEntity queryMembers(MemberSearchDto searchDto, Pageable pageable, PagedResourcesAssembler<MemberDto> assembler) {
+    @ApiOperation(value = "뺄셈", notes = "num1 에서 num2 를 뺍니다.")
+    public ResponseEntity queryMembers(@ApiIgnore MemberSearchDto searchDto,@ApiIgnore Pageable pageable, PagedResourcesAssembler<MemberDto> assembler) {
 
         Page<MemberDto> memberPages = memberService.findAll(searchDto, pageable);
 
@@ -104,14 +113,15 @@ public class MemberApiController {
     /**
      * 회원 정보 수정
      *
-     * @param id
+     * @param memberId
      * @param memberParamDto
      * @param errors
      * @return
      */
-    @PutMapping("/{id}")
-    public ResponseEntity updateMember(@PathVariable Long id,
-                                       @RequestBody @Valid MemberParamDto memberParamDto, Errors errors) {
+    @PutMapping("/{memberId}")
+    @ApiOperation(value = "뺄셈", notes = "num1 에서 num2 를 뺍니다.")
+    public ResponseEntity updateMember(@PathVariable Long memberId,
+                                       @RequestBody @Valid @ApiIgnore MemberParamDto memberParamDto, Errors errors) {
         if (errors.hasErrors()) {
             return badRequest(errors);
         }
@@ -120,12 +130,12 @@ public class MemberApiController {
             return badRequest(errors);
         }
 
-        MemberDto member = memberService.findByMember(id);
+        MemberDto member = memberService.findByMember(memberId);
         if (member == null) {
             return ResponseEntity.notFound().build();
         }
 
-        MemberDto updateMember = memberService.updateMember(id, memberParamDto);
+        MemberDto updateMember = memberService.updateMember(memberId, memberParamDto);
         MemberResource memberResource = new MemberResource(updateMember);
         var selfLinkBuilder = linkTo(MemberApiController.class).slash(member.getMemberId());
         memberResource.add(selfLinkBuilder.withRel("create-member"));
@@ -142,14 +152,15 @@ public class MemberApiController {
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteMember(@PathVariable Long id) {
-        MemberDto member = memberService.findByMember(id);
+    @DeleteMapping("/{memberId}")
+    @ApiOperation(value = "뺄셈", notes = "num1 에서 num2 를 뺍니다.")
+    public ResponseEntity deleteMember(@PathVariable Long memberId) {
+        MemberDto member = memberService.findByMember(memberId);
         if (member == null) {
             return ResponseEntity.notFound().build();
         }
 
-        memberService.deleteMember(id);
+        memberService.deleteMember(memberId);
 
         MemberResource memberResource = new MemberResource(member);
         var selfLinkBuilder = linkTo(MemberApiController.class).slash(member.getMemberId());

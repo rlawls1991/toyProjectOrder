@@ -9,6 +9,7 @@ import com.ideas.domain.order.service.OrderService;
 import com.ideas.domain.resource.OrderResource;
 import com.ideas.error.ApiResponseMessage;
 import com.ideas.error.ErrorsResource;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 
 @RestController
 @RequestMapping(value = "/api", consumes = MediaType.APPLICATION_JSON_VALUE)
